@@ -20,7 +20,7 @@
   <groupId>log4j</groupId>
   <artifactId>apache-log4j-zeroconf</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <name>Apache Zeroconf Companion for log4j 1.2.</name>
   <description>This companion provides an appender that uses Zeroconf to advertise its presence.</description>
   <url>http://logging.apache.org:80/log4j/companions/zeroconf</url>
@@ -64,9 +64,9 @@
 	</license>
 </licenses>
 <scm>
-	<connection>scm:svn:http://svn.apache.org/repos/asf/logging/log4j/companions/zeroconf/trunk</connection>
-	<developerConnection>scm:svn:https://svn.apache.org/repos/asf/logging/log4j/companions/zeroconf/trunk</developerConnection>
-	<url>http://svn.apache.org/viewcvs.cgi/logging/log4j/companions/zeroconf/trunk</url>
+	<connection>scm:svn:http://svn.apache.org/repos/asf/logging/log4j/companions/zeroconf/tags/v1_0_rc1</connection>
+	<developerConnection>scm:svn:https://svn.apache.org/repos/asf/logging/log4j/companions/zeroconf/tags/v1_0_rc1</developerConnection>
+	<url>http://svn.apache.org/viewcvs.cgi/logging/log4j/companions/zeroconf/tags/v1_0_rc1</url>
 </scm>
 <organization>
     <name>Apache Software Foundation</name>

@@ -32,43 +32,39 @@ import javax.jmdns.JmDNS;
  */
 public class Zeroconf4log4j {
 
-    private static final JmDNS instance;
-
-    static {
-        try {
-            instance = new JmDNS();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to initialize JmDNS");
-        }
-    }
+    private static JmDNS instance;
 
     /**
      * Returns the current instance of the JmDNS being used by log4j.
      * 
-     * @throws IllegalStateException if JmDNS was not correctly initialized.
+     * @throws RuntimeException if JmDNS was not correctly initialized.
      * 
      * @return
      */
-    public static JmDNS getInstance() {
-        checkState();
+    public static synchronized JmDNS getInstance() {
+        if (instance == null) {
+            try {
+                instance = new JmDNS();
+            } catch (Exception e) {
+                throw new RuntimeException(
+                        "Failed to create an instance of JmDNS", e);
+            }
+        }
         return instance;
     }
 
-    private static void checkState() {
-        if (instance == null) {
-            throw new IllegalStateException(
-                    "JmDNS did not initialize correctly");
-        }
-    }
-    
     /**
-     * Ensures JmDNS cleanly broadcasts 'goodbye' and closes any sockets, and (more imporantly)
+     * Ensures JmDNS cleanly broadcasts 'goodbye' and closes any sockets, and (more importantly)
      * ensures some Threads exit so your JVM can exit.
+     * 
+     * This clears an internal {@link JmDNS} variable so that a subsequent call to {@link #getInstance()}
+     * will initialize and create a new one.
      *
      */
     public static void shutdown() {
-        checkState();
-        instance.close();
+        if (instance != null) {
+            instance.close();
+            instance = null;
+        }
     }
 }

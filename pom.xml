@@ -163,6 +163,7 @@
       </plugin>	 
 	  <plugin>
          <artifactId>maven-assembly-plugin</artifactId>
+        
          <configuration>
            <descriptors>
               <descriptor>src/assembly/bin.xml</descriptor>
@@ -171,6 +172,7 @@
         </configuration>
         <executions>
             <execution>
+               <phase>package</phase>
                 <goals>
                     <goal>assembly</goal>
                 </goals>
@@ -181,6 +183,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <executions>
             <execution>
+                <phase>package</phase>
                 <goals>
                     <goal>jar</goal>
                     <goal>javadoc</goal>
@@ -210,7 +213,7 @@
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
-      <version>1.2.9</version>
+      <version>1.2.16-SNAPSHOT</version>
     </dependency>    
     <dependency>
       <groupId>jmdns</groupId>

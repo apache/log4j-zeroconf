@@ -42,63 +42,18 @@ public class ZeroConfSocketHubAppender extends SocketHubAppender {
     public static final String DEFAULT_ZEROCONF_ZONE = "_log4j._tcp.local.";
     private String zeroConfZone = DEFAULT_ZEROCONF_ZONE;
 
-    private Object logger;
-    private Method logInfoMethod;
-    private Method logErrorMethod;
-
     private int actualPortUsed;
     private InetAddress actualAddressUsed;
+    private ZeroConfSupport zeroConfSupport;
 
     public ZeroConfSocketHubAppender() {
         setName("SocketHubAppender");
-        try {
-            Method getLoggerMethod = this.getClass().getMethod("getLogger",
-                    new Class[0]);
-            logger = getLoggerMethod.invoke(this, new Object[0]);
-            logInfoMethod = logger.getClass().getMethod("info",
-                    new Class[] { Object.class });
-            logErrorMethod = logger.getClass().getMethod("error",
-                    new Class[] { Object.class });
-        } catch (Exception e) {
-            // we're not in log4j1.3 land
-        }
     }
 
     public void activateOptions() {
         super.activateOptions();
-        try {
-            JmDNS jmDNS = Zeroconf4log4j.getInstance();
-            ServiceInfo info = buildServiceInfo();
-            logWithlog4j12Compatibility(Level.INFO,
-                    "Registering this SocketHubAppender as :" + info);
-            jmDNS.registerService(info);
-        } catch (IOException e) {
-            logWithlog4j12Compatibility(
-                    Level.ERROR,
-                    "Failed to instantiate JmDNS to broadcast via ZeroConf, will now operate in simple SocketHubAppender mode");
-        }
-    }
-
-    private ServiceInfo buildServiceInfo() {
-        return new ServiceInfo(zeroConfZone, getName(), actualPortUsed,
-                "SocketHubAppender on port " + this.actualPortUsed);
-    }
-
-    private void logWithlog4j12Compatibility(Level level, String message) {
-        if (logger != null && logInfoMethod != null & logErrorMethod != null) {
-            try {
-                switch (level.toInt()) {
-                case Level.INFO_INT:
-                    logInfoMethod.invoke(logger, new Object[] { message });
-                    break;
-                case Level.ERROR_INT:
-                    logInfoMethod.invoke(logger, new Object[] { message });
-                    break;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        zeroConfSupport = new ZeroConfSupport(zeroConfZone, actualPortUsed, getName());
+        zeroConfSupport.advertise();
     }
 
     /**
@@ -127,16 +82,9 @@ public class ZeroConfSocketHubAppender extends SocketHubAppender {
 
     public synchronized void close() {
         super.close();
-        try {
-            JmDNS jmDNS = Zeroconf4log4j.getInstance();
-            ServiceInfo info = buildServiceInfo();
-            logWithlog4j12Compatibility(Level.INFO,
-                    "Deregistering this SocketHubAppender (" + info + ")");
-            jmDNS.unregisterService(info);
-        } catch (Exception e) {
-            logWithlog4j12Compatibility(
-                    Level.ERROR,
-                    "Failed to instantiate JmDNS to broadcast via ZeroConf, will now operate in simple SocketHubAppender mode");
+        if (zeroConfSupport != null)
+        {
+            zeroConfSupport.unadvertise();
         }
     }
 

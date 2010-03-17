@@ -41,13 +41,12 @@ public class ZeroConfSocketHubAppenderTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        jmdns = Zeroconf4log4j.getInstance();
+        jmdns = (JmDNS) ZeroConfSupport.getJMDNSInstance();
     }
 
     protected void tearDown() throws Exception {
         super.tearDown();
-        Zeroconf4log4j.shutdown();
-
+        jmdns.close();
     }
 
     /**

@@ -21,9 +21,8 @@
   </properties>
   <body>
     <release version="1.0" date="TDB" description="Initial release">
-      <action issue="42773" type="add">
-        Initial release of zeroconf companion.
-      </action>
+      <action action="update">Upgraded to Apache Maven 3</action>
+      <action issue="42773" type="add">Initial release of zeroconf companion.</action>
     </release>
   </body>
 </document>

@@ -82,6 +82,7 @@
       <plugin>
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
+        <version>0.7</version>
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -163,6 +164,11 @@
             <artifactId>ant-nodeps</artifactId>
             <version>1.6.5</version>
           </dependency>
+         <dependency>
+           <groupId>ant</groupId>
+           <artifactId>ant</artifactId>
+           <version>1.6.5</version>
+         </dependency>
           <dependency>
             <groupId>ant-contrib</groupId>
             <artifactId>ant-contrib</artifactId>
@@ -209,7 +215,65 @@
                 </goals>
             </execution>
         </executions>
-      </plugin>     
+      </plugin>
+      <plugin>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.0</version>
+        <configuration>
+          <templateFile>${basedir}/src/site/maven-site.vm</templateFile>
+          <reportPlugins>
+            <plugin>
+              <artifactId>maven-project-info-reports-plugin</artifactId>
+              <reportSets>
+                <reportSet>
+                  <reports>
+                    <report>scm</report>
+                    <report>dependencies</report>
+                    <report>cim</report>
+                    <report>issue-tracking</report>
+                    <report>mailing-list</report>
+                    <report>license</report>
+                  </reports>
+                </reportSet>
+              </reportSets>
+            </plugin>
+            <plugin>
+              <artifactId>maven-changes-plugin</artifactId>
+              <reportSets>
+                <reportSet>
+                  <reports>
+                    <report>changes-report</report>
+                  </reports>
+                </reportSet>
+              </reportSets>
+              <configuration>
+                <issueLinkTemplate>%URL%/show_bug.cgi?id=%ISSUE%</issueLinkTemplate>
+              </configuration>
+            </plugin>      
+            <plugin>
+              <artifactId>maven-pmd-plugin</artifactId>
+            </plugin>
+            <plugin>
+              <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+          </reportPlugins>
+        </configuration>
+        <!-- <executions>
+          <execution>
+          <phase>package</phase>		
+          <goals>
+          <goal>site</goal>
+          </goals>
+          </execution>
+          </executions>
+        -->
+      </plugin>
+      <plugin>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <goals>site-deploy</goals>
+        </configuration>
+      </plugin>
     </plugins>
 </build>
   <dependencies>
@@ -230,55 +294,6 @@
       <version>1.0</version>
     </dependency>    
   </dependencies>
-  <reporting>
-    <excludeDefaults>true</excludeDefaults>  
-    <plugins>
-      <plugin>
-        <artifactId>maven-project-info-reports-plugin</artifactId>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>scm</report>
-              <report>dependencies</report>
-              <report>cim</report>
-              <report>issue-tracking</report>
-              <report>mailing-list</report>
-              <report>license</report>
-            </reports>
-          </reportSet>
-        </reportSets>
-      </plugin>
-      <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>jxr-maven-plugin</artifactId>
-      </plugin>
-      <plugin>
-          <artifactId>maven-release-plugin</artifactId>
-          <configuration>
-              <goals>site-deploy</goals>
-          </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-changes-plugin</artifactId>
-      	<reportSets>
-          <reportSet>
-            <reports>
-              <report>changes-report</report>
-            </reports>
-          </reportSet>
-        </reportSets>
-        <configuration>
-        	<issueLinkTemplate>%URL%/show_bug.cgi?id=%ISSUE%</issueLinkTemplate>
-        </configuration>
-      </plugin>      
-      <plugin>
-        <artifactId>maven-pmd-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <artifactId>maven-javadoc-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </reporting>
  <distributionManagement>
     <repository>
       <id>logging.repo</id>
